@@ -2,32 +2,27 @@
 interface IAnimal {
     name: string;
     age: number;
-    species: string;
+    readonly species: string; // FIX 5: added readonly
     makeSound(): void;
     getInfo(): string;
 }
 
 // 2. Abstract Class (Encapsulation & Inheritance)
-// Provides a base blueprint. We can't instantiate 'Animal' directly, 
-// but we can extend it to create specific species.
 abstract class Animal implements IAnimal {
     constructor(
-        public name: string,
-        public age: number,
-        public readonly species: string 
+        public readonly name: string,    // FIX 3: was public, now readonly
+        public readonly age: number,     // FIX 3: was public, now readonly
+        public readonly species: string
     ) {}
 
-    // Abstract method: Forces all child classes to implement their own sound
     abstract makeSound(): void;
 
-    // Shared method inherited by all animals
     getInfo(): string {
         return `${this.name} is a ${this.age}-year-old ${this.species}.`;
     }
 }
 
 // 3. Concrete Classes (Polymorphism - Arctic Edition ❄️)
-// Each class extends Animal but implements the makeSound method differently.
 class PolarBear extends Animal {
     constructor(name: string, age: number) {
         super(name, age, "Polar Bear");
@@ -58,12 +53,11 @@ class Walrus extends Animal {
     }
 }
 
-// 4. Generic Zoo Class (Generics & Scalability)
-// Using <T extends Animal> ensures our Zoo only accepts Animals.
-class Zoo<T extends Animal> {
-    private animals: T[] = [];
+// 4. Zoo Class — FIX 4: removed decorative generic <T>
+class Zoo {
+    private animals: Animal[] = [];
 
-    addAnimal(animal: T): void {
+    addAnimal(animal: Animal): void {
         this.animals.push(animal);
         console.log(`[+] Added ${animal.name} the ${animal.species} to the arctic enclosure.`);
     }
@@ -71,7 +65,7 @@ class Zoo<T extends Animal> {
     removeAnimal(name: string): void {
         const initialCount = this.animals.length;
         this.animals = this.animals.filter(animal => animal.name !== name);
-        
+
         if (this.animals.length < initialCount) {
             console.log(`[-] Removed ${name} from the zoo.`);
         } else {
@@ -100,29 +94,19 @@ class Zoo<T extends Animal> {
     }
 }
 
-// ==========================================
-// 5. Execution (Console Application)
-// ==========================================
+// 5. Execution
+const myArcticZoo = new Zoo(); // FIX 4: removed <Animal> type parameter
 
-// Initialize our Zoo
-const myArcticZoo = new Zoo<Animal>();
-
-// Create some arctic animals
 const lorek = new PolarBear("Iorek", 8);
 const pingu = new Penguin("Pingu", 2);
 const wally = new Walrus("Wally", 15);
 
-// Test Additions
 myArcticZoo.addAnimal(lorek);
 myArcticZoo.addAnimal(pingu);
 myArcticZoo.addAnimal(wally);
 
-// Test Display
 myArcticZoo.displayAllAnimals();
-
-// Test Polymorphic Sounds
 myArcticZoo.triggerAllSounds();
 
-// Test Removal
 myArcticZoo.removeAnimal("Pingu");
 myArcticZoo.displayAllAnimals();
