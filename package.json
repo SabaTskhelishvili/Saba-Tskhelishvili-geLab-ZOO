@@ -1,5 +1,14 @@
 {
-  "dependencies": {
-    "typescript": "^5.0.0"
+  "name": "zoo-app",
+  "version": "1.0.0",
+  "description": "Arctic Zoo console application",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc && node dist/index.js"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
   }
 }
